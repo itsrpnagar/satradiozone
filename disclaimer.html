@@ -14,13 +14,24 @@ body{font-family:'Inter',sans-serif;background:#fff;color:#111;}
 .logo-wrap{display:flex;align-items:center;gap:9px;text-decoration:none;flex-shrink:0;}
 .logo-text{font-family:'Orbitron',sans-serif;font-size:18px;font-weight:900;letter-spacing:1px;color:#fff;white-space:nowrap;}
 .logo-text .r{color:#00aaff;}
-.topbar{background:#001233;padding:14px 48px;display:flex;align-items:center;justify-content:space-between;flex-wrap:nowrap;gap:12px;}
-.topbar-num{color:#7dd3fc;font-size:13px;display:flex;align-items:center;gap:6px;text-decoration:none;}
-.topbar-num strong{color:#fff;font-size:14px;font-weight:700;}
-.topbar-cta{background:#00aaff;color:#fff;border:none;padding:9px 20px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;text-decoration:none;}
-.show-desktop{display:flex;}
-.show-mobile{display:none;}
-@media(max-width:768px){.show-desktop{display:none !important;}.show-mobile{display:inline-flex !important;}}
+/* TOPBAR */
+.topbar{background:#001233;padding:14px 48px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:nowrap;}
+.logo-wrap{display:flex;align-items:center;gap:9px;text-decoration:none;flex-shrink:0;}
+.logo-text{font-family:'Orbitron',sans-serif;font-size:18px;font-weight:900;letter-spacing:1px;color:#fff;white-space:nowrap;}
+.logo-text .r{color:#00aaff;}
+.topbar-num{color:#7dd3fc;font-size:14px;font-weight:500;text-decoration:none;display:flex;align-items:center;gap:6px;white-space:nowrap;}
+.topbar-num strong{color:#fff;font-size:15px;font-weight:700;letter-spacing:.5px;}
+.topbar-cta{background:#00aaff;color:#fff;border:none;padding:10px 22px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;text-decoration:none;display:none;align-items:center;gap:6px;white-space:nowrap;flex-shrink:0;}
+@media(max-width:768px){
+  .topbar{padding:12px 16px;}
+  .topbar-num{display:none !important;}
+  .topbar-cta{display:inline-flex !important;}
+  .logo-text{font-size:14px;letter-spacing:.3px;}
+}
+@media(max-width:380px){
+  .logo-text{font-size:12px;}
+  .topbar-cta{padding:9px 14px;font-size:12px;}
+}
 .legal-wrap{padding:60px 48px;max-width:860px;margin:0 auto;}
 .legal-wrap h1{font-size:28px;font-weight:800;color:#001233;margin-bottom:6px;}
 .updated{font-size:12px;color:#888;margin-bottom:32px;padding-bottom:20px;border-bottom:1px solid #eee;}
@@ -55,12 +66,13 @@ body{font-family:'Inter',sans-serif;background:#fff;color:#111;}
 <body>
 <div class="topbar">
   <a href="/" class="logo-wrap">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" fill="#00aaff"/><path d="M12 2C6.48 2 2 6.48 2 12" stroke="#00aaff" stroke-width="2" stroke-linecap="round"/><path d="M12 6c-3.31 0-6 2.69-6 6" stroke="#00aaff88" stroke-width="2" stroke-linecap="round"/><path d="M12 22c5.52 0 10-4.48 10-10" stroke="#ffffff55" stroke-width="2" stroke-linecap="round"/><path d="M12 18c3.31 0 6-2.69 6-6" stroke="#ffffff33" stroke-width="2" stroke-linecap="round"/></svg>
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="3" fill="#00aaff"/><path d="M12 2C6.48 2 2 6.48 2 12" stroke="#00aaff" stroke-width="2" stroke-linecap="round"/><path d="M12 6c-3.31 0-6 2.69-6 6" stroke="#00aaff88" stroke-width="2" stroke-linecap="round"/><path d="M12 22c5.52 0 10-4.48 10-10" stroke="#ffffff55" stroke-width="2" stroke-linecap="round"/><path d="M12 18c3.31 0 6-2.69 6-6" stroke="#ffffff33" stroke-width="2" stroke-linecap="round"/></svg>
     <div class="logo-text">SAT<span class="r">RADIO</span>ZONE</div>
   </a>
-  <div class="topbar-phone"><strong>+1 (844) 542-8440</strong></div>
+  <a href="tel:+18445428440" class="topbar-num">&#128222;&nbsp;<strong>+1 (844) 542-8440</strong></a>
   <a href="tel:+18445428440" class="topbar-cta">&#128222; Call Now</a>
 </div>
+
 <div class="legal-wrap">
   <h1>Disclaimer</h1>
   <div class="updated">Last updated: June 2025 &nbsp;|&nbsp; HCL Trading Company &nbsp;|&nbsp; satradiozone.online</div>
