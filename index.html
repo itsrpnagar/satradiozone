@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>SatRadioZone — Satellite Radio Guidance</title>
+<meta name="description" content="Independent satellite radio guidance for activation, billing, signal questions and subscription changes."/>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
+<link rel="shortcut icon" href="/favicon.svg"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Orbitron:wght@700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Inter',sans-serif;background:#fff;color:#111;}
+
+.topbar{background:#001233;padding:14px 48px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:nowrap;}
+.logo-wrap{display:flex;align-items:center;gap:9px;text-decoration:none;flex-shrink:0;}
+.logo-text{font-family:'Orbitron',sans-serif;font-size:18px;font-weight:900;letter-spacing:1px;color:#fff;white-space:nowrap;}
+.logo-text .r{color:#00aaff;}
+.topbar-num{color:#7dd3fc;font-size:14px;font-weight:500;text-decoration:none;display:flex;align-items:center;gap:6px;white-space:nowrap;}
+.topbar-num strong{color:#fff;font-size:15px;font-weight:700;letter-spacing:.5px;}
+.topbar-cta{background:#00aaff;color:#fff;border:none;padding:10px 22px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;text-decoration:none;display:none;align-items:center;gap:6px;white-space:nowrap;flex-shrink:0;}
+@media(max-width:768px){
+  .topbar{padding:12px 16px;}
+  .topbar-num{display:none !important;}
+  .topbar-cta{display:inline-flex !important;}
+  .logo-text{font-size:14px;letter-spacing:.5px;}
+}
+@media(max-width:380px){
+  .logo-text{font-size:12px;}
+  .topbar-cta{padding:9px 14px;font-size:12px;}
+}
+.hero{position:relative;width:100%;min-height:520px;overflow:hidden;}
+.hero-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 42%;}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,8,35,0.95) 0%,rgba(0,15,55,0.82) 52%,rgba(0,8,28,0.10) 100%);}
+.hero-content{position:relative;z-index:2;padding:70px 48px 80px;max-width:560px;}
+.hero h1{color:#fff;font-size:38px;font-weight:800;line-height:1.22;margin-bottom:16px;}
+.hero h1 em{color:#00aaff;font-style:normal;}
+.hero-sub{color:#a8cce8;font-size:15px;line-height:1.85;margin-bottom:32px;max-width:420px;}
+.btn-main{background:#00aaff;color:#fff;border:none;padding:15px 32px;border-radius:7px;font-size:16px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:9px;text-decoration:none;}
+.btn-main:hover{background:#0092dd;}
+.section{padding:60px 48px;}
+.section-alt{background:#f7faff;padding:60px 48px;}
+.sec-label{font-size:11px;font-weight:600;color:#00aaff;letter-spacing:1.8px;text-transform:uppercase;margin-bottom:10px;}
+.sec-title{font-size:26px;font-weight:800;color:#001233;margin-bottom:8px;}
+.sec-sub{font-size:14px;color:#667;margin-bottom:36px;}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:22px;}
+.step{background:#f4f8ff;border:1px solid #d8eaff;border-radius:12px;padding:26px 22px;}
+.step-num{width:40px;height:40px;background:#001f5b;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;margin-bottom:14px;}
+.step h3{font-size:15px;font-weight:700;color:#001233;margin-bottom:8px;}
+.step p{font-size:13px;color:#556;line-height:1.7;}
+.info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;}
+.info-card{border:1px solid #d8eaff;border-radius:12px;padding:24px;}
+.info-icon{width:44px;height:44px;background:#e6f1fb;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:14px;}
+.info-card h3{font-size:15px;font-weight:700;color:#001233;margin-bottom:8px;}
+.info-card p{font-size:13px;color:#556;line-height:1.75;}
+.faq-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:16px;}
+.faq-item{background:#fff;border:1px solid #d0e4ff;border-radius:12px;padding:20px;}
+.faq-q{font-size:14px;font-weight:700;color:#001233;margin-bottom:9px;display:flex;align-items:flex-start;gap:9px;}
+.faq-badge{background:#001f5b;color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;flex-shrink:0;margin-top:2px;}
+.faq-a{font-size:13px;color:#445;line-height:1.75;padding-left:28px;}
+.cta-banner{background:#001233;padding:60px 48px;text-align:center;}
+.cta-banner h2{color:#fff;font-size:28px;font-weight:800;margin-bottom:10px;}
+.cta-banner p{color:#7dd3fc;font-size:14px;margin-bottom:10px;}
+.phone-big{color:#00aaff;font-size:34px;font-weight:800;letter-spacing:1px;margin:16px 0 24px;}
+.btn-white{background:#fff;color:#001233;border:none;padding:14px 32px;border-radius:7px;font-size:15px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-block;}
+footer{background:#00091f;padding:40px 48px 28px;}
+.footer-tagline{color:#4a6a88;font-size:12px;margin-top:6px;margin-bottom:28px;}
+.footer-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:20px;margin-bottom:32px;}
+.footer-card{background:#001233;border:1px solid #ffffff10;border-radius:10px;padding:18px 20px;}
+.footer-card h4{color:#7dd3fc;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:14px;}
+.footer-card a{display:block;color:#94b8d8;font-size:13px;text-decoration:none;margin-bottom:9px;}
+.footer-card a:hover{color:#fff;}
+.footer-card p{color:#4a6a88;font-size:12px;line-height:1.8;}
+.footer-bottom{border-top:1px solid #ffffff12;padding-top:20px;}
+.footer-disclaimer{color:#3a5a78;font-size:11px;line-height:1.85;}
+.footer-disclaimer strong{color:#5a7a98;}
+.footer-copy{color:#2a4a68;font-size:11px;margin-top:10px;}
+@media(max-width:768px){
+  .hero{min-height:460px;}.hero-content{padding:50px 22px 60px;}.hero h1{font-size:26px;}
+  .hero-sub{font-size:13px;}.btn-main{font-size:14px;padding:13px 22px;}
+  .section{padding:44px 22px;}.section-alt{padding:44px 22px;}.cta-banner{padding:44px 22px;}
+  footer{padding:36px 22px 24px;}.phone-big{font-size:26px;}.sec-title{font-size:22px;}
+}
+@media(max-width:480px){
+  .hero{min-height:440px;}.hero h1{font-size:22px;}.hero-sub{font-size:12px;margin-bottom:22px;}
+  .hero-overlay{background:linear-gradient(160deg,rgba(0,8,35,0.96) 0%,rgba(0,15,55,0.90) 60%,rgba(0,8,28,0.55) 100%);}
+  .steps,.info-grid,.faq-grid{grid-template-columns:1fr;}.footer-grid{grid-template-columns:1fr 1fr;}
+  .phone-big{font-size:22px;}.cta-banner h2{font-size:20px;}
+}
+@media(max-width:360px){.hero h1{font-size:20px;}.footer-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a href="/" class="logo-wrap"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="3" fill="#00aaff"/><path d="M12 2C6.48 2 2 6.48 2 12" stroke="#00aaff" stroke-width="2" stroke-linecap="round"/><path d="M12 6c-3.31 0-6 2.69-6 6" stroke="#00aaff88" stroke-width="2" stroke-linecap="round"/><path d="M12 22c5.52 0 10-4.48 10-10" stroke="#ffffff55" stroke-width="2" stroke-linecap="round"/><path d="M12 18c3.31 0 6-2.69 6-6" stroke="#ffffff33" stroke-width="2" stroke-linecap="round"/></svg><div class="logo-text">SAT<span class="r">RADIO</span>ZONE</div></a>
+  <a href="tel:+18445428440" class="topbar-num">&#128222;&nbsp;<strong>+1 (844) 542-8440</strong></a>
+  <a href="tel:+18445428440" class="topbar-cta">&#128222; Call Now</a>
+</div>
+<div class="hero">
+  <img class="hero-img" src="hero.jpg" alt="Person adjusting car radio dashboard"/>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <h1>Having Trouble With<br>Your <em>Satellite Radio?</em></h1>
+    <p class="hero-sub">Get step-by-step guidance for satellite radio activation, signal questions, billing inquiries, and subscription changes — a live advisor is ready to help.</p>
+    <a href="tel:+18445428440" class="btn-main">&#128222; +1 (844) 542-8440</a>
+  </div>
+</div>
+<section class="section">
+  <div class="sec-label">How it works</div>
+  <div class="sec-title">Get Guidance in 3 Simple Steps</div>
+  <div class="sec-sub">Quick answers for any satellite radio question</div>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><h3>Call Our Advisor Line</h3><p>Connect with a knowledgeable advisor via phone — ready to assist with your satellite radio questions.</p></div>
+    <div class="step"><div class="step-num">2</div><h3>Share Your Question</h3><p>Tell us what you need guidance on — activation, signal, billing, or subscription changes — we cover it all.</p></div>
+    <div class="step"><div class="step-num">3</div><h3>Get a Clear Answer</h3><p>Our advisor walks you through each step clearly until your question is fully resolved.</p></div>
+  </div>
+</section>
+<section class="section-alt">
+  <div class="sec-label">What we assist with</div>
+  <div class="sec-title">Satellite Radio Guidance Areas</div>
+  <div class="sec-sub">Common topics our advisors help listeners navigate</div>
+  <div class="info-grid">
+    <div class="info-card"><div class="info-icon">&#128225;</div><h3>Radio Activation</h3><p>New vehicle or new listener? Our advisors guide you through the activation process from start to finish.</p></div>
+    <div class="info-card"><div class="info-icon">&#128179;</div><h3>Billing Inquiries</h3><p>Questions about your statement, renewal, or plan options? We help you understand your account clearly.</p></div>
+    <div class="info-card"><div class="info-icon">&#128268;</div><h3>Signal Questions</h3><p>Experiencing weak or intermittent signal? Our team explains common causes and guides you through standard steps.</p></div>
+    <div class="info-card"><div class="info-icon">&#127991;</div><h3>Subscription Changes</h3><p>Need to upgrade, downgrade, pause, or transfer your plan? We walk you through all available options.</p></div>
+  </div>
+</section>
+<section class="section">
+  <div class="sec-label">FAQ</div>
+  <div class="sec-title">Frequently Asked Questions</div>
+  <div class="sec-sub">Common satellite radio questions answered clearly</div>
+  <div class="faq-grid">
+    <div class="faq-item"><div class="faq-q"><span class="faq-badge">Q</span>How do I activate satellite radio in a new car?</div><div class="faq-a">You will need your Radio ID (RID/ESN) from the radio display or Settings menu. Call our advisor line and we will walk you through every step.</div></div>
+    <div class="faq-item"><div class="faq-q"><span class="faq-badge">Q</span>Why does my signal keep dropping?</div><div class="faq-a">Signal interruptions are often caused by tunnels, tall buildings, or dense trees. If it persists in open areas, a remote refresh may be needed — our advisors explain how to request one.</div></div>
+    <div class="faq-item"><div class="faq-q"><span class="faq-badge">Q</span>How do I cancel or pause my subscription?</div><div class="faq-a">Have your account number ready and call our line. We explain each step clearly so you can make the right decision.</div></div>
+    <div class="faq-item"><div class="faq-q"><span class="faq-badge">Q</span>I was charged after cancelling — what do I do?</div><div class="faq-a">Our advisors walk you through how to review your account status and the steps to dispute unexpected charges with your provider.</div></div>
+    <div class="faq-item"><div class="faq-q"><span class="faq-badge">Q</span>Can I transfer my subscription to a new vehicle?</div><div class="faq-a">Yes. You will need the new vehicle's Radio ID and your account details. Our team explains the transfer process step by step.</div></div>
+    <div class="faq-item"><div class="faq-q"><span class="faq-badge">Q</span>How can I find out about renewal deals?</div><div class="faq-a">Existing listeners are often eligible for promotional rates. Our advisors can guide you on what to ask your provider at renewal time.</div></div>
+    <div class="faq-item"><div class="faq-q"><span class="faq-badge">Q</span>The satellite radio app is not working.</div><div class="faq-a">Try force-closing and reopening the app. If the issue continues, call us and we will guide you through the next steps.</div></div>
+    <div class="faq-item"><div class="faq-q"><span class="faq-badge">Q</span>What channels come with each plan?</div><div class="faq-a">Channel availability varies by plan tier. Our advisors can explain the differences so you can choose what fits your preferences.</div></div>
+  </div>
+</section>
+<section class="cta-banner">
+  <h2>Speak With a Satellite Radio Advisor</h2>
+  <p>Get clear answers to your satellite radio questions</p>
+  <div class="phone-big">+1 (844) 542-8440</div>
+  <a href="tel:+18445428440" class="btn-white">&#128222; Call Now</a>
+</section>
+<footer>
+  <a href="/" class="logo-wrap" style="margin-bottom:6px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="3" fill="#00aaff"/><path d="M12 2C6.48 2 2 6.48 2 12" stroke="#00aaff" stroke-width="2" stroke-linecap="round"/><path d="M12 6c-3.31 0-6 2.69-6 6" stroke="#00aaff88" stroke-width="2" stroke-linecap="round"/><path d="M12 22c5.52 0 10-4.48 10-10" stroke="#ffffff55" stroke-width="2" stroke-linecap="round"/><path d="M12 18c3.31 0 6-2.69 6-6" stroke="#ffffff33" stroke-width="2" stroke-linecap="round"/></svg><div class="logo-text">SAT<span class="r">RADIO</span>ZONE</div></a>
+  <div class="footer-tagline">Independent satellite radio guidance — not affiliated with any provider</div>
+  <div class="footer-grid">
+    <div class="footer-card"><h4>Quick Links</h4><a href="/">Home</a><a href="about.html">About Us</a><a href="contact.html">Contact</a></div>
+    <div class="footer-card"><h4>Legal</h4><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms of Service</a><a href="disclaimer.html">Disclaimer</a></div>
+    <div class="footer-card"><h4>Company</h4><p>HCL Trading Company<br/>Kota, Rajasthan 324005<br/>India<br/>GST: 08BIRPN3837Q1Z7</p></div>
+    <div class="footer-card"><h4>Reach Us</h4><a href="tel:+18445428440">&#128222; +1 (844) 542-8440</a><a href="mailto:info@satradiozone.online">&#9993; info@satradiozone.online</a></div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-disclaimer"><strong>Disclaimer:</strong> SatRadioZone (satradiozone.online) is an independent third-party guidance service operated by HCL Trading Company, Kota, Rajasthan, India (GST: 08BIRPN3837Q1Z7). Not affiliated with SiriusXM Radio Inc. or any satellite radio provider. All trademarks are property of their respective owners.</div>
+    <div class="footer-copy">&copy; 2025 SatRadioZone &mdash; HCL Trading Company. All rights reserved.</div>
+  </div>
+</footer>
+</body></html>
