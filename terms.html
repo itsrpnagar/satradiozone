@@ -34,11 +34,27 @@ body{font-family:'Inter',sans-serif;background:#fff;color:#111;}
 .inner-footer p{color:#2a4a68;font-size:11px;}
 @media(max-width:768px){.topbar{padding:12px 20px;}.legal-wrap{padding:40px 22px;}.inner-footer{padding:20px 22px;}}
 @media(max-width:480px){.logo-text{font-size:15px;}}
+
+/* TOPBAR MOBILE FIX */
+.topbar{flex-wrap:nowrap !important;}
+.logo-text{white-space:nowrap !important;font-size:18px;}
+.topbar-num{white-space:nowrap !important;}
+.topbar-cta{white-space:nowrap !important;flex-shrink:0;}
+@media(max-width:768px){
+  .topbar{padding:12px 16px !important;}
+  .topbar-num{display:none !important;}
+  .topbar-cta{display:inline-flex !important;}
+  .logo-text{font-size:14px !important;letter-spacing:.3px !important;}
+}
+@media(max-width:380px){
+  .logo-text{font-size:12px !important;}
+  .topbar-cta{padding:9px 14px !important;font-size:12px !important;}
+}
 </style>
 </head>
 <body>
 <div class="topbar">
-  <a href="index.html" class="logo-wrap">
+  <a href="/" class="logo-wrap">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" fill="#00aaff"/><path d="M12 2C6.48 2 2 6.48 2 12" stroke="#00aaff" stroke-width="2" stroke-linecap="round"/><path d="M12 6c-3.31 0-6 2.69-6 6" stroke="#00aaff88" stroke-width="2" stroke-linecap="round"/><path d="M12 22c5.52 0 10-4.48 10-10" stroke="#ffffff55" stroke-width="2" stroke-linecap="round"/><path d="M12 18c3.31 0 6-2.69 6-6" stroke="#ffffff33" stroke-width="2" stroke-linecap="round"/></svg>
     <div class="logo-text">SAT<span class="r">RADIO</span>ZONE</div>
   </a>
@@ -76,7 +92,7 @@ body{font-family:'Inter',sans-serif;background:#fff;color:#111;}
 </div>
 <div class="inner-footer">
   <div class="inner-footer-links">
-    <a href="index.html">Home</a>
+    <a href="/">Home</a>
     <a href="about.html">About Us</a>
     <a href="contact.html">Contact</a>
     <a href="privacy.html">Privacy Policy</a>
