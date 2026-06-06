@@ -44,13 +44,13 @@ body{font-family:'Inter',sans-serif;background:#fff;color:#111;}
 .sec-title{font-size:26px;font-weight:800;color:#001233;margin-bottom:8px;}
 .sec-sub{font-size:14px;color:#667;margin-bottom:36px;}
 .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:22px;}
-.step{background:#f4f8ff;border:1px solid #d8eaff;border-radius:12px;padding:26px 22px;}
-.step-num{width:40px;height:40px;background:#001f5b;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;margin-bottom:14px;}
-.step h3{font-size:15px;font-weight:700;color:#001233;margin-bottom:8px;}
+.step{background:#f4f8ff;border:1px solid #d8eaff;border-radius:12px;padding:22px;}
+.step-num{width:36px;height:36px;background:#001f5b;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;flex-shrink:0;}
+.step-header{display:flex;align-items:center;gap:12px;margin-bottom:10px;}.step h3{font-size:15px;font-weight:700;color:#001233;margin:0;}
 .step p{font-size:13px;color:#556;line-height:1.7;}
 .info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;}
 .info-card{border:1px solid #d8eaff;border-radius:12px;padding:24px;}
-.info-icon{width:44px;height:44px;background:#e6f1fb;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:14px;}
+.info-icon{width:40px;height:40px;background:#e6f1fb;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}.info-card-header{display:flex;align-items:center;gap:12px;margin-bottom:10px;}.info-card h3{font-size:15px;font-weight:700;color:#001233;margin:0;}
 .info-card h3{font-size:15px;font-weight:700;color:#001233;margin-bottom:8px;}
 .info-card p{font-size:13px;color:#556;line-height:1.75;}
 .faq-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:16px;}
@@ -110,9 +110,9 @@ footer{background:#00091f;padding:40px 48px 28px;}
   <div class="sec-title">Get Guidance in 3 Simple Steps</div>
   <div class="sec-sub">Quick answers for any satellite radio question</div>
   <div class="steps">
-    <div class="step"><div class="step-num">1</div><h3>Call Our Advisor Line</h3><p>Connect with a knowledgeable advisor via phone — ready to assist with your satellite radio questions.</p></div>
-    <div class="step"><div class="step-num">2</div><h3>Share Your Question</h3><p>Tell us what you need guidance on — activation, signal, billing, or subscription changes — we cover it all.</p></div>
-    <div class="step"><div class="step-num">3</div><h3>Get a Clear Answer</h3><p>Our advisor walks you through each step clearly until your question is fully resolved.</p></div>
+    <div class="step"><div class="step-header"><div class="step-num">1</div><h3>Call Our Advisor Line</h3></div><p>Connect with a knowledgeable advisor via phone — ready to assist with your satellite radio questions.</p></div>
+    <div class="step"><div class="step-header"><div class="step-num">2</div><h3>Share Your Question</h3></div><p>Tell us what you need guidance on — activation, signal, billing, or subscription changes — we cover it all.</p></div>
+    <div class="step"><div class="step-header"><div class="step-num">3</div><h3>Get a Clear Answer</h3></div><p>Our advisor walks you through each step clearly until your question is fully resolved.</p></div>
   </div>
 </section>
 <section class="section-alt">
@@ -120,10 +120,10 @@ footer{background:#00091f;padding:40px 48px 28px;}
   <div class="sec-title">Satellite Radio Guidance Areas</div>
   <div class="sec-sub">Common topics our advisors help listeners navigate</div>
   <div class="info-grid">
-    <div class="info-card"><div class="info-icon">&#128225;</div><h3>Radio Activation</h3><p>New vehicle or new listener? Our advisors guide you through the activation process from start to finish.</p></div>
-    <div class="info-card"><div class="info-icon">&#128179;</div><h3>Billing Inquiries</h3><p>Questions about your statement, renewal, or plan options? We help you understand your account clearly.</p></div>
-    <div class="info-card"><div class="info-icon">&#128268;</div><h3>Signal Questions</h3><p>Experiencing weak or intermittent signal? Our team explains common causes and guides you through standard steps.</p></div>
-    <div class="info-card"><div class="info-icon">&#127991;</div><h3>Subscription Changes</h3><p>Need to upgrade, downgrade, pause, or transfer your plan? We walk you through all available options.</p></div>
+    <div class="info-card"><div class="info-card-header"><div class="info-icon">&#128225;</div><h3>Radio Activation</h3></div><p>New vehicle or new listener? Our advisors guide you through the activation process from start to finish.</p></div>
+    <div class="info-card"><div class="info-card-header"><div class="info-icon">&#128179;</div><h3>Billing Inquiries</h3></div><p>Questions about your statement, renewal, or plan options? We help you understand your account clearly.</p></div>
+    <div class="info-card"><div class="info-card-header"><div class="info-icon">&#128268;</div><h3>Signal Questions</h3></div><p>Experiencing weak or intermittent signal? Our team explains common causes and guides you through standard steps.</p></div>
+    <div class="info-card"><div class="info-card-header"><div class="info-icon">&#127991;</div><h3>Subscription Changes</h3></div><p>Need to upgrade, downgrade, pause, or transfer your plan? We walk you through all available options.</p></div>
   </div>
 </section>
 <section class="section">
