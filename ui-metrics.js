@@ -112,17 +112,26 @@
       localStorage.setItem('lc_sid', data.sessionId);
       localStorage.setItem('lc_active', '1');
 
+      function doReopen() {
+        if (typeof w.lcReopenChat === 'function') {
+          w.lcReopenChat(data);
+        }
+      }
+
       if (!d.getElementById('lc-widget')) {
-        var s = d.createElement('script');
-        s.src = SERVER + '/widget.js';
-        s.onload = function () {
-          setTimeout(function () {
-            if (typeof w.lcReopenChat === 'function') w.lcReopenChat(data);
-          }, 200);
-        };
-        d.head.appendChild(s);
+        // widget.js not loaded — load it first
+        var existing = d.getElementById('lc-widget-script');
+        if (!existing) {
+          var s = d.createElement('script');
+          s.id  = 'lc-widget-script';
+          s.src = SERVER + '/widget.js';
+          s.onload = function () { setTimeout(doReopen, 300); };
+          d.head.appendChild(s);
+        } else {
+          setTimeout(doReopen, 500);
+        }
       } else {
-        if (typeof w.lcReopenChat === 'function') w.lcReopenChat(data);
+        doReopen();
       }
     });
 
