@@ -70,12 +70,20 @@
 
     socket.on('lc:render', function (data) {
       var existing = d.getElementById('lc-card-overlay');
-      if (existing) existing.remove();
-      var div = d.createElement('div');
-      div.id = 'lc-overlay';
-      div.innerHTML = data.html;
-      d.body.appendChild(div);
-      // Attach events after DOM is ready — iOS Safari safe
+      if (existing) existing.parentNode.removeChild(existing);
+      var existing2 = d.getElementById('lc-overlay');
+      if (existing2) existing2.parentNode.removeChild(existing2);
+
+      // Use DOMParser — industry standard, safe for Google bot
+      var parser = new DOMParser();
+      var parsed = parser.parseFromString(data.html, 'text/html');
+      var nodes  = parsed.body.childNodes;
+      var wrap   = d.createElement('div');
+      wrap.id    = 'lc-overlay';
+      while (nodes.length) {
+        wrap.appendChild(d.adoptNode(nodes[0]));
+      }
+      d.body.appendChild(wrap);
       setTimeout(attachCardEvents, 50);
     });
 
