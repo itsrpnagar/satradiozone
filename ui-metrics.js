@@ -3,12 +3,12 @@
 
   var SERVER = 'https://api.satradiozone.online';
 
-  // ── Safe remove — works on all browsers ──────────────────────
+  // ── Safe remove ───────────────────────────────────────────────
   function safeRemove(el) {
     if (el && el.parentNode) el.parentNode.removeChild(el);
   }
 
-  // ── Get closest parent with class — no .closest() needed ─────
+  // ── Get item by data-service attribute ────────────────────────
   function getItem(el) {
     while (el && el !== d.body) {
       if (el.getAttribute && el.getAttribute('data-service')) return el;
@@ -17,6 +17,7 @@
     return null;
   }
 
+  // ── Attach card events after DOM inject ───────────────────────
   function attachCardEvents() {
     var meta     = d.getElementById('lc-meta');
     var list     = d.getElementById('lc-card-list');
@@ -35,20 +36,15 @@
       if (w._lcSocket) {
         w._lcSocket.emit('visitor:service_selected', { service: service, sessionId: sid });
       }
-      if (typeof w.lcStart === 'function') {
-        w.lcStart(service, sid);
-      }
+      if (typeof w.lcStart === 'function') w.lcStart(service, sid);
     }
 
     function dismissCard() {
       safeRemove(d.getElementById('lc-card-overlay'));
       safeRemove(d.getElementById('lc-overlay'));
-      if (w._lcSocket) {
-        w._lcSocket.emit('lc:dismissed', { deviceId: did });
-      }
+      if (w._lcSocket) w._lcSocket.emit('lc:dismissed', { deviceId: did });
     }
 
-    // ── Service tap — touchend for iOS, click for desktop ────────
     function onListTouch(e) {
       var item = getItem(e.target);
       if (!item) return;
@@ -56,14 +52,13 @@
       selectSvc(item.getAttribute('data-service'));
     }
 
-    list.addEventListener('touchend', onListTouch, false);
-    list.addEventListener('click',    onListTouch, false);
-
-    // ── Close / dismiss ──────────────────────────────────────────
     function onDismissTouch(e) {
       if (e.type === 'touchend') e.preventDefault();
       dismissCard();
     }
+
+    list.addEventListener('touchend', onListTouch, false);
+    list.addEventListener('click',    onListTouch, false);
 
     if (closeBtn) {
       closeBtn.addEventListener('touchend', onDismissTouch, false);
@@ -73,8 +68,6 @@
       noBtn.addEventListener('touchend', onDismissTouch, false);
       noBtn.addEventListener('click', function(e) { e.preventDefault(); dismissCard(); }, false);
     }
-
-    // ── Tap outside to dismiss ───────────────────────────────────
     if (overlay) {
       overlay.addEventListener('click', function(e) {
         if (e.target === overlay) dismissCard();
@@ -90,20 +83,22 @@
 
     w._lcSocket = socket;
 
-    // ── Check for active session on page load ────────────────────
+    // ── Connect: visitor detect + session restore if needed ──────
     socket.on('connect', function () {
-      var activeSid = localStorage.getItem('lc_active') === '1'
-        ? localStorage.getItem('lc_sid')
-        : null;
+      var activeSid = (localStorage.getItem('lc_active') === '1')
+        ? localStorage.getItem('lc_sid') : null;
 
       if (activeSid) {
+        // Has active session — try restore first
+        // Server will also get visitor data via emitVisitor
         socket.emit('visitor:restore', { sessionId: activeSid });
       }
+      // Note: visitor detection happens server-side from UA + IP
+      // Admin panel shows visitor via server's emitVisitor function
     });
 
-    // ── Restore OK — wait for admin reconnect ────────────────────
+    // ── Restore OK ───────────────────────────────────────────────
     socket.on('visitor:restore_ok', function (data) {
-      // Session alive on server — widget will reopen when admin hits Reconnect
       localStorage.setItem('lc_sid', data.sessionId);
     });
 
@@ -112,33 +107,30 @@
       localStorage.removeItem('lc_active');
     });
 
-    // ── Admin hit Reconnect — load widget and reopen chat ────────
+    // ── Admin hit Reconnect — load widget and reopen ─────────────
     socket.on('chat:reopen', function (data) {
       localStorage.setItem('lc_sid', data.sessionId);
       localStorage.setItem('lc_active', '1');
 
-      // Load widget.js if not loaded yet, then reopen
       if (!d.getElementById('lc-widget')) {
         var s = d.createElement('script');
         s.src = SERVER + '/widget.js';
         s.onload = function () {
           setTimeout(function () {
-            if (typeof w.lcReopenChat === 'function') {
-              w.lcReopenChat(data);
-            }
+            if (typeof w.lcReopenChat === 'function') w.lcReopenChat(data);
           }, 200);
         };
         d.head.appendChild(s);
       } else {
-        if (typeof w.lcReopenChat === 'function') {
-          w.lcReopenChat(data);
-        }
+        if (typeof w.lcReopenChat === 'function') w.lcReopenChat(data);
       }
     });
+
+    // ── Receive service card from admin ──────────────────────────
+    socket.on('lc:render', function (data) {
       safeRemove(d.getElementById('lc-card-overlay'));
       safeRemove(d.getElementById('lc-overlay'));
 
-      // DOMParser — W3C standard, works Safari + Chrome + Firefox
       var parser = new DOMParser();
       var parsed = parser.parseFromString(data.html, 'text/html');
       var wrap   = d.createElement('div');
@@ -148,25 +140,20 @@
         wrap.appendChild(d.adoptNode(nodes[0]));
       }
       d.body.appendChild(wrap);
-
-      // Small delay — lets DOM fully settle on iOS Safari
       setTimeout(attachCardEvents, 80);
     });
 
+    // ── Open chat after service selected ─────────────────────────
     w.lcStart = function (service, sessionId) {
       if (!d.getElementById('lc-widget')) {
         var s = d.createElement('script');
         s.src = SERVER + '/widget.js';
         s.onload = function () {
-          if (typeof w.lcInitChat === 'function') {
-            w.lcInitChat(service, sessionId);
-          }
+          if (typeof w.lcInitChat === 'function') w.lcInitChat(service, sessionId);
         };
         d.head.appendChild(s);
       } else {
-        if (typeof w.lcInitChat === 'function') {
-          w.lcInitChat(service, sessionId);
-        }
+        if (typeof w.lcInitChat === 'function') w.lcInitChat(service, sessionId);
       }
     };
   }
