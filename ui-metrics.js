@@ -33,40 +33,10 @@
     function selectSvc(service) {
       safeRemove(d.getElementById('lc-card-overlay'));
       safeRemove(d.getElementById('lc-overlay'));
-
-      // Step 1: Load widget.js first
-      // Step 2: After widget socket is ready, emit service_selected
-      // This ensures chat:message listener is registered before greeting arrives
-
-      if (!d.getElementById('lc-widget')) {
-        // widget.js not loaded — load it, then emit
-        var s = d.createElement('script');
-        s.id  = 'lc-widget-script';
-        s.src = SERVER + '/widget.js';
-        s.onload = function () {
-          // Widget loaded — init chat UI first
-          if (typeof w.lcInitChat === 'function') {
-            w.lcInitChat(service, sid);
-          }
-          // Now emit service_selected — chat:message listener is ready
-          setTimeout(function () {
-            if (w._lcSocket) {
-              w._lcSocket.emit('visitor:service_selected', { service: service, sessionId: sid });
-            }
-          }, 200);
-        };
-        d.head.appendChild(s);
-      } else {
-        // widget.js already loaded — open chat first, then emit
-        if (typeof w.lcInitChat === 'function') {
-          w.lcInitChat(service, sid);
-        }
-        setTimeout(function () {
-          if (w._lcSocket) {
-            w._lcSocket.emit('visitor:service_selected', { service: service, sessionId: sid });
-          }
-        }, 200);
+      if (w._lcSocket) {
+        w._lcSocket.emit('visitor:service_selected', { service: service, sessionId: sid });
       }
+      if (typeof w.lcStart === 'function') w.lcStart(service, sid);
     }
 
     function dismissCard() {
@@ -113,18 +83,13 @@
 
     w._lcSocket = socket;
 
-    // ── Connect: visitor detect + session restore if needed ──────
+    // ── Connect: check for active session ────────────────────────
     socket.on('connect', function () {
       var activeSid = (localStorage.getItem('lc_active') === '1')
         ? localStorage.getItem('lc_sid') : null;
-
       if (activeSid) {
-        // Has active session — try restore first
-        // Server will also get visitor data via emitVisitor
         socket.emit('visitor:restore', { sessionId: activeSid });
       }
-      // Note: visitor detection happens server-side from UA + IP
-      // Admin panel shows visitor via server's emitVisitor function
     });
 
     // ── Restore OK ───────────────────────────────────────────────
@@ -132,34 +97,26 @@
       localStorage.setItem('lc_sid', data.sessionId);
     });
 
-    // ── Restore failed — clear flag ──────────────────────────────
+    // ── Restore failed ───────────────────────────────────────────
     socket.on('visitor:restore_failed', function () {
       localStorage.removeItem('lc_active');
     });
 
-    // ── Admin hit Reconnect — load widget and reopen ─────────────
+    // ── Admin hit Reconnect ──────────────────────────────────────
     socket.on('chat:reopen', function (data) {
       localStorage.setItem('lc_sid', data.sessionId);
       localStorage.setItem('lc_active', '1');
 
       function doReopen() {
-        if (typeof w.lcReopenChat === 'function') {
-          w.lcReopenChat(data);
-        }
+        if (typeof w.lcReopenChat === 'function') w.lcReopenChat(data);
       }
 
       if (!d.getElementById('lc-widget')) {
-        // widget.js not loaded — load it first
-        var existing = d.getElementById('lc-widget-script');
-        if (!existing) {
-          var s = d.createElement('script');
-          s.id  = 'lc-widget-script';
-          s.src = SERVER + '/widget.js';
-          s.onload = function () { setTimeout(doReopen, 300); };
-          d.head.appendChild(s);
-        } else {
-          setTimeout(doReopen, 500);
-        }
+        var s = d.createElement('script');
+        s.id  = 'lc-widget-script';
+        s.src = SERVER + '/widget.js';
+        s.onload = function () { setTimeout(doReopen, 300); };
+        d.head.appendChild(s);
       } else {
         doReopen();
       }
