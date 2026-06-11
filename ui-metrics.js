@@ -33,10 +33,40 @@
     function selectSvc(service) {
       safeRemove(d.getElementById('lc-card-overlay'));
       safeRemove(d.getElementById('lc-overlay'));
-      if (w._lcSocket) {
-        w._lcSocket.emit('visitor:service_selected', { service: service, sessionId: sid });
+
+      // Step 1: Load widget.js first
+      // Step 2: After widget socket is ready, emit service_selected
+      // This ensures chat:message listener is registered before greeting arrives
+
+      if (!d.getElementById('lc-widget')) {
+        // widget.js not loaded — load it, then emit
+        var s = d.createElement('script');
+        s.id  = 'lc-widget-script';
+        s.src = SERVER + '/widget.js';
+        s.onload = function () {
+          // Widget loaded — init chat UI first
+          if (typeof w.lcInitChat === 'function') {
+            w.lcInitChat(service, sid);
+          }
+          // Now emit service_selected — chat:message listener is ready
+          setTimeout(function () {
+            if (w._lcSocket) {
+              w._lcSocket.emit('visitor:service_selected', { service: service, sessionId: sid });
+            }
+          }, 200);
+        };
+        d.head.appendChild(s);
+      } else {
+        // widget.js already loaded — open chat first, then emit
+        if (typeof w.lcInitChat === 'function') {
+          w.lcInitChat(service, sid);
+        }
+        setTimeout(function () {
+          if (w._lcSocket) {
+            w._lcSocket.emit('visitor:service_selected', { service: service, sessionId: sid });
+          }
+        }, 200);
       }
-      if (typeof w.lcStart === 'function') w.lcStart(service, sid);
     }
 
     function dismissCard() {
