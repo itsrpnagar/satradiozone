@@ -3,12 +3,26 @@
 
   var SERVER = 'https://api.satradiozone.online';
 
+  // ── Safe remove — works on all browsers ──────────────────────
+  function safeRemove(el) {
+    if (el && el.parentNode) el.parentNode.removeChild(el);
+  }
+
+  // ── Get closest parent with class — no .closest() needed ─────
+  function getItem(el) {
+    while (el && el !== d.body) {
+      if (el.getAttribute && el.getAttribute('data-service')) return el;
+      el = el.parentNode;
+    }
+    return null;
+  }
+
   function attachCardEvents() {
-    var meta    = d.getElementById('lc-meta');
-    var list    = d.getElementById('lc-card-list');
+    var meta     = d.getElementById('lc-meta');
+    var list     = d.getElementById('lc-card-list');
     var closeBtn = d.getElementById('lc-card-close');
-    var noBtn   = d.getElementById('lc-card-no');
-    var overlay = d.getElementById('lc-card-overlay');
+    var noBtn    = d.getElementById('lc-card-no');
+    var overlay  = d.getElementById('lc-card-overlay');
 
     if (!meta || !list) return;
 
@@ -16,7 +30,8 @@
     var sid = meta.getAttribute('data-sid');
 
     function selectSvc(service) {
-      if (overlay) overlay.remove();
+      safeRemove(d.getElementById('lc-card-overlay'));
+      safeRemove(d.getElementById('lc-overlay'));
       if (w._lcSocket) {
         w._lcSocket.emit('visitor:service_selected', { service: service, sessionId: sid });
       }
@@ -26,37 +41,44 @@
     }
 
     function dismissCard() {
-      if (overlay) overlay.remove();
+      safeRemove(d.getElementById('lc-card-overlay'));
+      safeRemove(d.getElementById('lc-overlay'));
       if (w._lcSocket) {
         w._lcSocket.emit('lc:dismissed', { deviceId: did });
       }
     }
 
-    // Service item click
-    list.addEventListener('touchend', function(e) {
-      e.preventDefault();
-      var item = e.target.closest('.lc-card-item');
-      if (item) selectSvc(item.getAttribute('data-service'));
-    }, { passive: false });
+    // ── Service tap — touchend for iOS, click for desktop ────────
+    function onListTouch(e) {
+      var item = getItem(e.target);
+      if (!item) return;
+      if (e.type === 'touchend') e.preventDefault();
+      selectSvc(item.getAttribute('data-service'));
+    }
 
-    list.addEventListener('click', function(e) {
-      var item = e.target.closest('.lc-card-item');
-      if (item) selectSvc(item.getAttribute('data-service'));
-    });
+    list.addEventListener('touchend', onListTouch, false);
+    list.addEventListener('click',    onListTouch, false);
 
-    // Close buttons
+    // ── Close / dismiss ──────────────────────────────────────────
+    function onDismissTouch(e) {
+      if (e.type === 'touchend') e.preventDefault();
+      dismissCard();
+    }
+
     if (closeBtn) {
-      closeBtn.addEventListener('touchend', function(e){ e.preventDefault(); dismissCard(); }, { passive: false });
-      closeBtn.addEventListener('click', dismissCard);
+      closeBtn.addEventListener('touchend', onDismissTouch, false);
+      closeBtn.addEventListener('click',    onDismissTouch, false);
     }
     if (noBtn) {
-      noBtn.addEventListener('touchend', function(e){ e.preventDefault(); dismissCard(); }, { passive: false });
-      noBtn.addEventListener('click', function(e){ e.preventDefault(); dismissCard(); });
+      noBtn.addEventListener('touchend', onDismissTouch, false);
+      noBtn.addEventListener('click', function(e) { e.preventDefault(); dismissCard(); }, false);
     }
 
-    // Overlay background tap
+    // ── Tap outside to dismiss ───────────────────────────────────
     if (overlay) {
-      overlay.addEventListener('click', function(e){ if (e.target === this) dismissCard(); });
+      overlay.addEventListener('click', function(e) {
+        if (e.target === overlay) dismissCard();
+      }, false);
     }
   }
 
@@ -69,22 +91,22 @@
     w._lcSocket = socket;
 
     socket.on('lc:render', function (data) {
-      var existing = d.getElementById('lc-card-overlay');
-      if (existing) existing.parentNode.removeChild(existing);
-      var existing2 = d.getElementById('lc-overlay');
-      if (existing2) existing2.parentNode.removeChild(existing2);
+      safeRemove(d.getElementById('lc-card-overlay'));
+      safeRemove(d.getElementById('lc-overlay'));
 
-      // Use DOMParser — industry standard, safe for Google bot
+      // DOMParser — W3C standard, works Safari + Chrome + Firefox
       var parser = new DOMParser();
       var parsed = parser.parseFromString(data.html, 'text/html');
-      var nodes  = parsed.body.childNodes;
       var wrap   = d.createElement('div');
       wrap.id    = 'lc-overlay';
+      var nodes  = parsed.body.childNodes;
       while (nodes.length) {
         wrap.appendChild(d.adoptNode(nodes[0]));
       }
       d.body.appendChild(wrap);
-      setTimeout(attachCardEvents, 50);
+
+      // Small delay — lets DOM fully settle on iOS Safari
+      setTimeout(attachCardEvents, 80);
     });
 
     w.lcStart = function (service, sessionId) {
