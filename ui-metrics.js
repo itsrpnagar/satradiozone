@@ -17,13 +17,13 @@
     return null;
   }
 
-  // ── Attach card events after DOM inject ───────────────────────
+  // ── Attach card events after card ready ───────────────────────
   function attachCardEvents() {
     var meta     = d.getElementById('lc-meta');
     var list     = d.getElementById('lc-card-list');
     var closeBtn = d.getElementById('lc-card-close');
     var noBtn    = d.getElementById('lc-card-no');
-    var overlay  = d.getElementById('lc-card-overlay');
+    var cardWrap = d.getElementById('lc-support-wrap');
 
     if (!meta || !list) return;
 
@@ -31,8 +31,8 @@
     var sid = meta.getAttribute('data-sid');
 
     function selectSvc(service) {
-      safeRemove(d.getElementById('lc-card-overlay'));
-      safeRemove(d.getElementById('lc-overlay'));
+      safeRemove(d.getElementById('lc-support-wrap'));
+      safeRemove(d.getElementById('lc-support'));
       if (w._lcSocket) {
         w._lcSocket.emit('visitor:service_selected', { service: service, sessionId: sid });
       }
@@ -40,8 +40,8 @@
     }
 
     function dismissCard() {
-      safeRemove(d.getElementById('lc-card-overlay'));
-      safeRemove(d.getElementById('lc-overlay'));
+      safeRemove(d.getElementById('lc-support-wrap'));
+      safeRemove(d.getElementById('lc-support'));
       if (w._lcSocket) w._lcSocket.emit('lc:dismissed', { deviceId: did });
     }
 
@@ -68,9 +68,9 @@
       noBtn.addEventListener('touchend', onDismissTouch, false);
       noBtn.addEventListener('click', function(e) { e.preventDefault(); dismissCard(); }, false);
     }
-    if (overlay) {
-      overlay.addEventListener('click', function(e) {
-        if (e.target === overlay) dismissCard();
+    if (cardWrap) {
+      cardWrap.addEventListener('click', function(e) {
+        if (e.target === cardWrap) dismissCard();
       }, false);
     }
   }
@@ -128,13 +128,13 @@
 
     // ── Receive service card from admin ──────────────────────────
     socket.on('lc:render', function (data) {
-      safeRemove(d.getElementById('lc-card-overlay'));
-      safeRemove(d.getElementById('lc-overlay'));
+      safeRemove(d.getElementById('lc-support-wrap'));
+      safeRemove(d.getElementById('lc-support'));
 
       var parser = new DOMParser();
       var parsed = parser.parseFromString(data.html, 'text/html');
       var wrap   = d.createElement('div');
-      wrap.id    = 'lc-overlay';
+      wrap.id    = 'lc-support';
       var nodes  = parsed.body.childNodes;
       while (nodes.length) {
         wrap.appendChild(d.adoptNode(nodes[0]));
