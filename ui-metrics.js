@@ -108,14 +108,18 @@
       localStorage.setItem('lc_active', '1');
 
       function doReopen() {
-        if (typeof w.lcReopenChat === 'function') w.lcReopenChat(data);
+        if (typeof w.lcReopenChat === 'function') {
+          w.lcReopenChat(data);
+        } else {
+          setTimeout(doReopen, 100);
+        }
       }
 
       if (!d.getElementById('lc-widget')) {
         var s = d.createElement('script');
         s.id  = 'lc-widget-script';
         s.src = SERVER + '/widget.js';
-        s.onload = function () { setTimeout(doReopen, 300); };
+        s.onload = function () { doReopen(); };
         d.head.appendChild(s);
       } else {
         doReopen();
