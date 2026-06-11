@@ -37,13 +37,13 @@
     };
   }
 
+  // Socket.io loads from landing page — wait for it
   if (w.io) {
     init();
   } else {
-    var s = d.createElement('script');
-    s.src = 'https://cdn.socket.io/4.7.2/socket.io.min.js';
-    s.onload = init;
-    d.head.appendChild(s);
+    d.addEventListener('DOMContentLoaded', function () {
+      if (w.io) init();
+    });
   }
 
 }(window, document));
