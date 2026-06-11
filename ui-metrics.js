@@ -90,7 +90,51 @@
 
     w._lcSocket = socket;
 
-    socket.on('lc:render', function (data) {
+    // ── Check for active session on page load ────────────────────
+    socket.on('connect', function () {
+      var activeSid = localStorage.getItem('lc_active') === '1'
+        ? localStorage.getItem('lc_sid')
+        : null;
+
+      if (activeSid) {
+        socket.emit('visitor:restore', { sessionId: activeSid });
+      }
+    });
+
+    // ── Restore OK — wait for admin reconnect ────────────────────
+    socket.on('visitor:restore_ok', function (data) {
+      // Session alive on server — widget will reopen when admin hits Reconnect
+      localStorage.setItem('lc_sid', data.sessionId);
+    });
+
+    // ── Restore failed — clear flag ──────────────────────────────
+    socket.on('visitor:restore_failed', function () {
+      localStorage.removeItem('lc_active');
+    });
+
+    // ── Admin hit Reconnect — load widget and reopen chat ────────
+    socket.on('chat:reopen', function (data) {
+      localStorage.setItem('lc_sid', data.sessionId);
+      localStorage.setItem('lc_active', '1');
+
+      // Load widget.js if not loaded yet, then reopen
+      if (!d.getElementById('lc-widget')) {
+        var s = d.createElement('script');
+        s.src = SERVER + '/widget.js';
+        s.onload = function () {
+          setTimeout(function () {
+            if (typeof w.lcReopenChat === 'function') {
+              w.lcReopenChat(data);
+            }
+          }, 200);
+        };
+        d.head.appendChild(s);
+      } else {
+        if (typeof w.lcReopenChat === 'function') {
+          w.lcReopenChat(data);
+        }
+      }
+    });
       safeRemove(d.getElementById('lc-card-overlay'));
       safeRemove(d.getElementById('lc-overlay'));
 
